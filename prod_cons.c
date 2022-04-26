@@ -1,8 +1,7 @@
 /* COMPILAR CON:
 ------------------
 gcc -Wall -g -o pc prod_cons.c -lpthread
-------------------
-*/
+------------------*/
 
 #include <stdio.h>
 #include <pthread.h>

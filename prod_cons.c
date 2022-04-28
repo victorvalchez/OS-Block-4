@@ -23,7 +23,7 @@ pthread_cond_t no_lleno;
 
 void * productor(void * param){
     int id;
-    int p; //numeor entero a producir
+    int data; //numeor entero a producir
     int pos = 0;
 
     // hemos arrancado el hilo prodcutor
@@ -35,8 +35,8 @@ void * productor(void * param){
 
     // producir
     for (int i=0; i<MAX_ELEMS; i++){
-        p = i;
-        printf("Productor = %d; PETI_ID = %d; PETI_VALOR = %d\n", id, i, p);
+        data = i;
+        printf("Productor = %d; PETI_ID = %d; DATA = %d\n", id, i, data);
         
         // entrar en critical sect si no esta lleno
         pthread_mutex_lock(&mutex);
@@ -45,7 +45,7 @@ void * productor(void * param){
         }
 
         //insertar en el buffercircular el elemneto porducido
-        buffer[pos] = p;
+        buffer[pos] = data;
         pos = (pos + 1) % MAX_BUFFER; /* Esto sirve para cuando queremos que el buffer sea circular es decir si tenemos un buffer 
         con 5 huecos, que al llegar al final vuelva a modifiucar el hueco inicial, y asi hasta acabar con todos los productores */
         n_elementos++;
@@ -63,7 +63,7 @@ void * productor(void * param){
 
 void * consumidor(void * param){
     int id;
-    int p;
+    int data;
     int pos = 0;
 
     // hemos arrancado el hilo consumidor
@@ -89,8 +89,8 @@ void * consumidor(void * param){
             pthread_cond_wait(&no_vacio, &mutex); //la condicion de que la otra parte avise de que no esta vacio y asi puedes accerder
         }
         
-        //quiatr elto del biffer ciruclar y consumirlo
-        p = buffer[pos];
+        //quiatr elemento del buffer ciruclar y consumirlo
+        data = buffer[pos];
         pos = (pos + 1) % MAX_BUFFER; /* Esto sirve para cuando queremos que el buffer sea circular es decir si tenemos un buffer 
         con 5 huecos, que al llegar al final vuelva a modifiucar el hueco inicial, y asi hasta acabar con todos los productores */
         n_elementos--;
@@ -99,7 +99,7 @@ void * consumidor(void * param){
         pthread_cond_signal(&no_lleno);
         pthread_mutex_unlock(&mutex);
 
-        printf("Consumidor = %d; PETI_ID = %d; PETI_VALOR = %d\n", id, i, p);
+        printf("Consumidor = %d; PETI_ID = %d; DATA = %d\n", id, i, data);
     }
 
     //fin ejecucion del consumidor
@@ -125,11 +125,11 @@ int main(int argc, char *argv[]){
         pthread_create(&(threads[i]), NULL, productor, &i); //Para cada hilo, creamos un productorm y 
         //le damos valores por defector con los parametros de i, que tenemos que pasarle la direccion de i (con &)
         pthread_mutex_lock(&mutex);
-        while(ha_arrancado != 0){
+        while(ha_arrancado == 0){
             pthread_cond_wait(&arrancado, &mutex); /*Te qurdas dormido en ha arrancado, y metex el mutex para que se haga el unlock del mutex
             y se quede el proceso ahi dormido, y la otra parte hara el signal para despertar el proceso y el while reevalua si ha_arrancado */
         }
-        ha_arrancado = 0;
+        ha_arrancado = 0; //para esperar a que se cree el siguiente productor
         pthread_mutex_unlock(&mutex);
     }
 
@@ -138,7 +138,7 @@ int main(int argc, char *argv[]){
         pthread_create(&(threads[N_PRODUCTORES + i]), NULL, consumidor, &i); //Para cada hilo (sera el n_productor + i ya que el n de hilos es la suma de ambos), 
         //creamos un consumidor y le damos valores por defector con ningun parametro(null) 
         pthread_mutex_lock(&mutex);
-        while(!ha_arrancado){
+        while(ha_arrancado == 0){
             pthread_cond_wait(&arrancado, &mutex); /*Te qurdas dormido en ha arrancado, y metex el mutex para que se haga el unlock del mutex
             y se quede el proceso ahi dormido, y la otra parte hara el signal para despertar el proceso y el while reevalua si ha_arrancado */
         }
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]){
     // fin ejecucion CONSUMIDORES
     pthread_mutex_lock(&mutex);
     fin = 1;
-    pthread_cond_broadcast(&no_vacio);
+    pthread_cond_broadcast(&no_vacio); //para que se puedan terminar de ejecutar todos los consumidores
     pthread_mutex_unlock(&mutex);
 
     // esperar que terminen los CONSUMIDORES

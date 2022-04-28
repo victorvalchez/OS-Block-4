@@ -15,7 +15,7 @@ VER COMO FUNCIONA Y ENTENDER
 
 pthread_t thread1, thread2; 
 pthread_attr_t attr; /*atributos de los threads*/
-pthread_mutex_t impresor=PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t impresor = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t imprimirHola;
 pthread_cond_t imprimirMundo;
 int impHola = 1;
@@ -54,10 +54,8 @@ int main (void)
     int i;
     pthread_attr_init (&attr);
     for (i=1; i<=N; i++) {
-        pthread_create(&thread2, &attr, 
-	imprimir, (void *)cadena_mundo);
-        pthread_create(&thread1, &attr, 
-	imprimir, (void *)cadena_hola);
+        pthread_create(&thread2, &attr, imprimir, (void *)cadena_mundo);
+        pthread_create(&thread1, &attr, imprimir, (void *)cadena_hola);
     }
     pthread_exit (NULL);
 }

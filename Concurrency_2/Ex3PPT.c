@@ -39,7 +39,7 @@ void * Escritor(void * p)
         pthread_mutex_unlock(&mutex);
         sleep(1); //tardo 1 sg en escribir
         dato+=2;
-        printf(“Escritor %ld: Dato = %d\n", i, dato);
+        printf("Escritor %ld: Dato = %d\n", i, dato);
         pthread_mutex_lock(&mutex);
         escribiendo--;
         pthread_cond_broadcast(&escribir);
@@ -47,5 +47,4 @@ void * Escritor(void * p)
         pthread_mutex_unlock(&mutex);
    }
 }
-
 */

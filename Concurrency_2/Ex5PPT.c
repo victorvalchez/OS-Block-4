@@ -43,12 +43,12 @@ proceso consumidor:
 
 #define DATOS_A_PRODUCIR 5
 #define MAX_BUFFER 1024
+char buffer[MAX_BUFFER];
 void *Productor(void *kk)   /* codigo del productor */
 {
     int pos = 0;  /* posicion dentro del buffer */
     int dato;     /* dato a producir */
     int i;
-    char buffer[MAX_BUFFER];
     sem_t holes;
     sem_t elements;
 
@@ -68,9 +68,8 @@ void *Consumidor(void *kk)  /* codigo del Consumidor */
    int pos = 0;
    int dato;
    int i;
-   char buffer[MAX_BUFFER];
-    sem_t holes;
-    sem_t elements;
+   sem_t holes;
+   sem_t elements;
 
    for(i=0; i < DATOS_A_PRODUCIR; i++ ) {
       sem_wait(&elements);    /* un elemento menos */

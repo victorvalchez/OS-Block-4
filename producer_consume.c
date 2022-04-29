@@ -3,10 +3,12 @@
 #include <pthread.h>
 
 #define MAX_BUFFER 1024
-#define DATA_SIZE 10
+#define DATOS_A_PRODUCIR 10
+
 pthread_cond_t no_lleno;
 pthread_cond_t no_vacio;
 pthread_mutex_t mutex;
+
 int n_elements = 0;
 int buffer[MAX_BUFFER];
 
@@ -14,7 +16,7 @@ void productor(){
     int data;
     int pos = 0;
 
-    for (int i = 0; i < DATA_SIZE; i++){
+    for (int i = 0; i < DATOS_A_PRODUCIR; i++){
         data = i;
         pthread_mutex_lock(&mutex);
 
@@ -22,9 +24,9 @@ void productor(){
             pthread_cond_wait(&no_lleno, &mutex);
         }
 
-        buffer[pos] = data;
-        pos = (pos + 1) % MAX_BUFFER;
-        n_elements++;
+        buffer[pos] = data;  //Guardanos la data en el buffer, en la posicion que toque
+        pos = (pos + 1) % MAX_BUFFER;  //Actualizamos la posicion
+        n_elements++;  //Y sumamos 1 al numero de elementos que hay en el buffer
 
         pthread_cond_signal(&no_vacio);
         pthread_mutex_unlock(&mutex);
@@ -38,7 +40,7 @@ void consumidor(){
     int data;
     int pos = 0;
 
-    for (int i = 0; i < DATA_SIZE; i++){
+    for (int i = 0; i < DATOS_A_PRODUCIR; i++){
         data = i;
         pthread_mutex_lock(&mutex);
         

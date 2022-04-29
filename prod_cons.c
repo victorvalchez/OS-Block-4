@@ -29,7 +29,7 @@ void * productor(void * param){
     // hemos arrancado el hilo prodcutor
     pthread_mutex_lock(&mutex);
     ha_arrancado = 1;
-    id = *((int *)param);
+    id = *((int *)param); //SIRVE PARA CONVERTIR EL PARAM A UN PUNTURO INTEGER EN CASO DE QUE NO SEA INTEGER
     pthread_cond_signal(&arrancado);
     pthread_mutex_unlock(&mutex);
 

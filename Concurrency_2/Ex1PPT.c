@@ -5,11 +5,6 @@ Given the following code, it is requested to implement the odd and even function
     Thread1 = 1
     Thread2 = 2
     Thread1 = 3
-    Thread2 = 4
-    Thread1 = 5
-    Thread2 = 6
-    Thread1 = 7
-    Thread2 = 8
 */
 
 //Given code
@@ -27,15 +22,14 @@ pthread_cond_t cL, cV;
 
 //Option B: working
 //COMO SE USA UNA VARIABLE COMPARTIDA, PUES CADA LOOP SE HACE 100 VECES
-void pares(void)
+void pares()
 {
-    int i;
-    for(i=0; i < 100; i++ ) //100 de uno
+    for(int i=0; i < 100; i++ ) //100 de uno
     {
         pthread_mutex_lock(&m);
         if (!par) // == 0
         {
-            pthread_cond_wait(&cL,&m);
+            pthread_cond_wait(&cL,&m);  //Desbloquea el mutex para que el otro acceda,
         }
         printf("Thread1 = %d \n", dato_compartido++);
         par=0;
@@ -44,10 +38,9 @@ void pares(void)
     }
 }
 
-void impares(void)
+void impares()
 {
-   int i;
-   for(i=0; i < 100; i++ ) // y 100 del otro
+   for(int i=0; i < 100; i++ ) // y 100 del otro
    {
         pthread_mutex_lock(&m);
         if (par)
@@ -55,7 +48,7 @@ void impares(void)
             pthread_cond_wait(&cV,&m);
         }
         printf("Thread2 = %d \n", dato_compartido++);
-        par=1;
+        par=1; //Par si para que pueda pasar al otro lado
         pthread_cond_signal(&cL);
         pthread_mutex_unlock(&m);
     }

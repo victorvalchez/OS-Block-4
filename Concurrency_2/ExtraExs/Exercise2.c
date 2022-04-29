@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #define MAX_BUFFER         10     /* tamanio del buffer */
-#define DATOS_A_PRODUCIR   1000    /* datos a producir */
+#define DATOS_A_PRODUCIR   100    /* datos a producir */
 
 pthread_mutex_t mutex;     /* mutex para controlar el acceso al
                            buffer compartido */

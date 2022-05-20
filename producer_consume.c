@@ -26,7 +26,7 @@ void productor(){
 
         buffer[pos] = data;  //Guardanos la data en el buffer, en la posicion que toque
         pos = (pos + 1) % MAX_BUFFER;  //Actualizamos la posicion
-        n_elements++;  //Y sumamos 1 al numero de elementos que hay en el buffer
+        n_elements++;  //Y sumamos 1 al numero de elementos que hay en el buffer m
 
         pthread_cond_signal(&no_vacio);
         pthread_mutex_unlock(&mutex);

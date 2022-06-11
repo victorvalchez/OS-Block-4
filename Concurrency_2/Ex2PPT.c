@@ -26,7 +26,7 @@ void *imprimir (void *arg)
         char a[12];
         pthread_mutex_lock (&impresor);
         strcpy(a, (char*)arg);
-        if (strncmp(a,cadena_hola,5)==0) {
+        if (strcmp(a,cadena_hola)==0) {
                 while (impHola == 0) {
                         pthread_cond_wait(&imprimirHola,&impresor);
                 }
@@ -42,19 +42,20 @@ void *imprimir (void *arg)
                 pthread_cond_signal(&imprimirHola);
         }
         pthread_mutex_unlock (&impresor);
-        pthread_exit (NULL);
+        pthread_exit(0);
 }
 
 int main (void)
 {
     pthread_cond_init(&imprimirHola, NULL);
     pthread_cond_init(&imprimirMundo, NULL);
+    pthread_mutex_init(&impresor, NULL);
     char cadena_hola[]="Hola ";
     char cadena_mundo[]="mundo \n";
     int i;
     pthread_attr_init (&attr);
     for (i=1; i<=N; i++) {
-        pthread_create(&thread2, &attr, imprimir, (void *)cadena_mundo);
+        pthread_create(&thread2, NULL, imprimir, (void *)cadena_mundo);
         pthread_create(&thread1, &attr, imprimir, (void *)cadena_hola);
     }
     pthread_exit (NULL);

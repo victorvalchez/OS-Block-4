@@ -31,6 +31,7 @@
     "**/.vscode/**"
   ],
   "files.associations": {
-    "*.tcc": "c"
+    "*.tcc": "c",
+    "unistd.h": "c"
   }
 }

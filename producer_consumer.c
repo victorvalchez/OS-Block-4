@@ -1,4 +1,8 @@
-//Producer consumer con mutex pero como el ejemplo de los apuntes
+/*Producer consumer con mutex pero como el ejemplo de los apuntes
+
+-------Version mas facil que el archivo prod_cons.c---------
+
+*/
 #include <stdio.h>
 #include <pthread.h>
 

@@ -13,8 +13,8 @@ Given the following code, it is requested to implement the odd and even function
 #include <stdlib.h>
 #include <pthread.h>
 
-int dato_compartido = 0; // para ir poniendo el numero de resultado 0-199
-int par = 1;  //0 False, 1 True
+int dato_compartido = 1; // para ir poniendo el numero de resultado 0-199
+int par = 0;  //0 False, 1 True
 pthread_mutex_t m;
 pthread_cond_t cL, cV;
 
@@ -24,14 +24,14 @@ pthread_cond_t cL, cV;
 //COMO SE USA UNA VARIABLE COMPARTIDA, PUES CADA LOOP SE HACE 100 VECES
 void pares()
 {
-    for(int i=0; i < 100; i++ ) //100 de uno
+    for(int i=0;i<10 ; i++ ) //100 de uno
     {
         pthread_mutex_lock(&m);
         if (!par) // == 0
         {
             pthread_cond_wait(&cL,&m);  //Desbloquea el mutex para que el otro acceda,
         }
-        printf("Thread1 = %d \n", dato_compartido);
+        printf("Par   = %d \n", dato_compartido);
         dato_compartido++;
         par=0; //Como si ha llegado hasta aqui significa que era par, lo ponemos en impar ya que el siguiente sera impar.
         pthread_cond_signal(&cV); //hace un cond signal para avisar de que es 
@@ -41,14 +41,14 @@ void pares()
 
 void impares()
 {
-   for(int i=0; i < 100; i++ ) // y 100 del otro
+   for(int i=0; i<10; i++ ) // y 100 del otro
    {
         pthread_mutex_lock(&m);
         if (par)
         {
             pthread_cond_wait(&cV,&m);
         }
-        printf("Thread2 = %d \n", dato_compartido);
+        printf("Impar = %d \n", dato_compartido);
         dato_compartido++;
         par=1; //Par si para que pueda pasar al otro lado
         pthread_cond_signal(&cL);
